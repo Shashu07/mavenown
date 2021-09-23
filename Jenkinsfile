@@ -38,59 +38,6 @@ pipeline
                }
            }
         }
-        stage('ContinuoDeployment')
-        {
-            steps
-           {
-               script
-               {
-               try
-               {
-                   deploy adapters: [tomcat9(credentialsId: '717abc9d-5f04-4862-b7c0-3783d63dfd3a', path: '', url: 'http://172.31.24.84:8080')], contextPath: 'qaapp', war: '**/*.war'
-               }
-               catch(Exception e3)
-               {
-                   mail bcc: '', body: 'jenkins is unable to deploy into tomcat ont he qaserver', cc: '', from: '', replyTo: '', subject: 'deploymentfailed', to: 'middleware@gmail.com'
-               }
-               }
-           }
-        }
-         stage('Continuostesting')
-        {
-            steps
-           {
-               script
-               {
-               try
-               {
-                    git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
-               sh 'java -jar /home/ubuntu/.jenkins/workspace/Declarativepipeline1/testing.jar'
-               }
-               catch(Exception e4)
-               {
-                   mail bcc: '', body: 'functional tettins ad failed', cc: '', from: '', replyTo: '', subject: 'testing failed', to: 'middleware@gmail.com'
-                   exit(1)
-               }
-               }
-           }
-        }
-         stage('ContinuousDelivey')
-         {
-             steps
-             {
-                 script
-                 {
-                 try
-                 {
-                     deploy adapters: [tomcat9(credentialsId: '717abc9d-5f04-4862-b7c0-3783d63dfd3a', path: '', url: 'http://172.31.26.222:8080')], contextPath: 'prodapp', war: '**/*.war'
-                 }
-                 catch(Exception e5)
-                 {
-                     mail bcc: '', body: 'jenkins is unable to deploy into tomcat on the prodserver', cc: '', from: '', replyTo: '', subject: 'deploymantfailed', to: 'deployment@gmail.com'
-                 }
-                 }
-             }
-         }
     }
    
     }
